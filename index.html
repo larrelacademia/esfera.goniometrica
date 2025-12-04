@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <title>Esfera goniomètrica – sin i cos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #0b1226;
+      --panel: #0e1530;
+      --accent: #60a5fa;
+      --accent2: #34d399;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #111827 0, #020617 40%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      padding: 16px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 16px;
+      padding: 20px 24px 24px;
+      max-width: 1100px;
+      width: 100%;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .logo-wrap img {
+      max-width: 180px;
+      opacity: 0.95;
+      transition: 0.15s;
+    }
+    .logo-wrap img:hover { opacity: 1; transform: translateY(-1px); }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h1 span {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, var(--accent2), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #0b1120;
+    }
+
+    .subtitle { font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .pill {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.18);
+      color: #6ee7b7;
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    label { color: var(--muted); font-size: 0.9rem; }
+
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.9rem;
+    }
+
+    input[type="range"] { width: 100%; }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px 16px;
+      margin-bottom: 10px;
+    }
+
+    .results-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), rgba(15,23,42,0.95));
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .result-line {
+      font-family: "JetBrains Mono", monospace;
+      margin: 2px 0;
+    }
+    .result-line .label { color: var(--muted); }
+    .result-line .emph { color: var(--accent2); font-weight: 600; }
+
+    table.special-angles {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.82rem;
+    }
+    table.special-angles td,
+    table.special-angles th {
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 4px 6px;
+      text-align: center;
+    }
+
+    .graph-card {
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.35);
+    }
+
+    /* Canvas responsive: ample 100% i proporció 4:3 */
+    #unit-circle {
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 4 / 3;
+      display: block;
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.4);
+    }
+
+    /* Desktop vs mòbil per les taules */
+    .desktop-only { display: block; }
+    .mobile-only { display: none; }
+
+    @media (max-width: 900px) {
+      .desktop-only { display: none; }
+      .mobile-only { display: block; }
+    }
+
+    /* Ajustos extra per mòbil petit */
+    @media (max-width: 600px) {
+      .card {
+        padding: 16px;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      .subtitle {
+        font-size: 0.85rem;
+      }
+      .results-box {
+        font-size: 0.85rem;
+      }
+      .result-line {
+        font-size: 0.8rem;
+      }
+      table.special-angles {
+        font-size: 0.78rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="logo-wrap">
+      <img src="https://i.ibb.co/Q7YJTwgn/PRINCIPAL-BEIGE.png" alt="L'Arrel Acadèmia">
+    </div>
+
+    <h1><span>G</span>Esfera goniomètrica – sin i cos</h1>
+
+    <p class="subtitle">Mou l’angle i observa sin(α) i cos(α) sobre la circumferència trigonomètrica.</p>
+
+    <div class="grid">
+      <!-- CONTROLS -->
+      <div>
+        <div class="pill">⚙️ Angle</div>
+
+        <div class="controls-grid">
+          <div>
+            <label>Angle (graus):</label>
+            <input id="angle-deg" type="number" value="30">
+          </div>
+
+          <div>
+            <label>Angle (0–360°):</label>
+            <input id="angle-slider" type="range" min="0" max="360" value="30">
+          </div>
+        </div>
+
+        <!-- RESULTATS -->
+        <div class="results-box">
+          <div class="result-line"><span class="label">α (°): </span><span id="res-deg">30</span></div>
+          <div class="result-line"><span class="label">α (rad): </span><span id="res-rad">π/6</span></div>
+          <div class="result-line"><span class="label">cos α = </span><span class="emph" id="res-cos"></span></div>
+          <div class="result-line"><span class="label">sin α = </span><span class="emph" id="res-sin"></span></div>
+          <div class="result-line"><span class="label">tan α = </span><span class="emph" id="res-tan"></span></div>
+          <div class="result-line" id="res-quadrant"></div>
+        </div>
+
+        <!-- Taula només en versió escriptori -->
+        <div class="desktop-only">
+          <div class="pill" style="margin-top:14px;">📌 Relació angle ⇢ radiants</div>
+          <table class="special-angles">
+            <tr><th>Graus</th><th>Radians</th></tr>
+            <tr><td>0°</td><td>0</td></tr>
+            <tr><td>90°</td><td>π/2</td></tr>
+            <tr><td>180°</td><td>π</td></tr>
+            <tr><td>270°</td><td>3π/2</td></tr>
+            <tr><td>360°</td><td>2π</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- GRÀFIC -->
+      <div>
+        <div class="pill">📈 Gràfic</div>
+        <div class="graph-card">
+          <!-- width/height inicials només com a fallback; JS els sobreescriu -->
+          <canvas id="unit-circle" width="720" height="540"></canvas>
+        </div>
+
+        <!-- Taula només en versió mòbil -->
+        <div class="mobile-only" style="margin-top: 20px;">
+          <div class="pill">📌 Relació angle ⇢ radiants</div>
+          <table class="special-angles">
+            <tr><th>Graus</th><th>Radians</th></tr>
+            <tr><td>0°</td><td>0</td></tr>
+            <tr><td>90°</td><td>π/2</td></tr>
+            <tr><td>180°</td><td>π</td></tr>
+            <tr><td>270°</td><td>3π/2</td></tr>
+            <tr><td>360°</td><td>2π</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function normalizeDeg(d){ d = d % 360; return d < 0 ? d + 360 : d; }
+function toRad(d){ return d * Math.PI / 180; }
+function round(x,n){ return Math.round(x * 10**n) / 10**n; }
+
+const degInput = document.getElementById("angle-deg");
+const slider = document.getElementById("angle-slider");
+
+const resDeg = document.getElementById("res-deg");
+const resRad = document.getElementById("res-rad");
+const resCos = document.getElementById("res-cos");
+const resSin = document.getElementById("res-sin");
+const resTan = document.getElementById("res-tan");
+const resQuadrant = document.getElementById("res-quadrant");
+
+const canvas = document.getElementById("unit-circle");
+const ctx = canvas.getContext("2d");
+
+// variables dependents de la mida, recalculades en cada resize
+let W, H, cx, cy, R;
+let currentDeg = 30; // angle actual
+
+function quadrant(d){
+  if (d>0 && d<90) return 1;
+  if (d>90 && d<180) return 2;
+  if (d>180 && d<270) return 3;
+  if (d>270 && d<360) return 4;
+  return 0;
+}
+
+function sign(x){
+  if (Math.abs(x) < 1e-8) return "(0)";
+  return x>0 ? "(+)" : "(–)";
+}
+
+function quadrantText(q,deg){
+  const r = toRad(deg);
+  const s = Math.sin(r), c = Math.cos(r), t = Math.tan(r);
+
+  if (q===1) return `Quadrant I: sin ${sign(s)}, cos ${sign(c)}, tan ${sign(t)}`;
+  if (q===2) return `Quadrant II: sin ${sign(s)}, cos ${sign(c)}, tan ${sign(t)}`;
+  if (q===3) return `Quadrant III: sin ${sign(s)}, cos ${sign(c)}, tan ${sign(t)}`;
+  if (q===4) return `Quadrant IV: sin ${sign(s)}, cos ${sign(c)}, tan ${sign(t)}`;
+
+  return `Sobre un eix – sin ${sign(s)}, cos ${sign(c)}, tan ${Math.abs(c)<1e-8 ? "indefinida" : sign(t)}`;
+}
+
+// Ajusta el canvas a l'ample disponible mantenint proporció 4:3
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const width = rect.width;
+  const height = rect.width * 0.75; // 4:3
+
+  canvas.width = width;
+  canvas.height = height;
+
+  W = canvas.width;
+  H = canvas.height;
+  cx = W / 2;
+  cy = H / 2;
+  R = Math.min(W, H) * 0.35;
+
+  draw(currentDeg);
+}
+
+function draw(deg){
+  const rad = toRad(deg);
+  const c = Math.cos(rad), s = Math.sin(rad);
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle="#020617";
+  ctx.fillRect(0,0,W,H);
+
+  // quadrants
+  const cols=["#2563eb22","#16a34a22","#eab30822","#ef444422"];
+  for(let i=0;i<4;i++){
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.fillStyle=cols[i];
+    ctx.arc(cx,cy,R,-Math.PI/2 + i*Math.PI/2, -Math.PI/2 + (i+1)*Math.PI/2);
+    ctx.fill();
+  }
+
+  // eixos
+  ctx.strokeStyle="#9ca3afcc";
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(cx-R*1.2,cy); ctx.lineTo(cx+R*1.2,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-R*1.2); ctx.lineTo(cx,cy+R*1.2); ctx.stroke();
+
+  // radian labels
+  ctx.fillStyle="#9ca3af";
+  ctx.font = (W < 400 ? "14px system-ui" : "16px system-ui");
+
+  ctx.textAlign="left"; ctx.textBaseline="middle";
+  ctx.fillText("0 ⇢ 2π", cx + R + 35, cy);
+  ctx.textAlign="right"; ctx.fillText("π", cx - R - 35, cy);
+
+  ctx.textAlign="center";
+  ctx.textBaseline="bottom";
+  ctx.fillText("π/2", cx, cy - R - 35);
+
+  ctx.textBaseline="top";
+  ctx.fillText("3π/2", cx, cy + R + 35);
+
+  // cercle
+  ctx.beginPath();
+  ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle="#60a5fa";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  // petit arc de l'angle (color lila)
+  const arcR = R * 0.2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);
+  ctx.strokeStyle = "#a855f7";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // radi
+  const px=cx+c*R, py=cy - s*R;
+  ctx.beginPath();
+  ctx.strokeStyle="#a855f7";
+  ctx.lineWidth=2;
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(px,py);
+  ctx.stroke();
+
+  // punt
+  ctx.beginPath();
+  ctx.arc(px,py,6,0,Math.PI*2);
+  ctx.fillStyle="#a855f7";
+  ctx.fill();
+
+  // projeccio cos
+  ctx.strokeStyle="#22c55e";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(cx + c*R, cy);
+  ctx.stroke();
+
+  // projeccio sin
+  ctx.strokeStyle="#eab308";
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(cx, cy - s*R);
+  ctx.stroke();
+
+  // línies guia
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle="#9ca3afaa";
+  ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.moveTo(px,py); ctx.lineTo(px,cy); ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(px,py); ctx.lineTo(cx,py); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // text cos
+  ctx.fillStyle="#22c55e";
+  ctx.textAlign="center";
+  ctx.textBaseline="top";
+  ctx.fillText(`cos α ≈ ${round(c,2)}`, (cx + (cx+c*R))/2, cy+4);
+
+  // text sin
+  ctx.fillStyle="#eab308";
+  ctx.textAlign="right";
+  ctx.textBaseline="middle";
+  ctx.fillText(`sin α ≈ ${round(s,2)}`, cx - 6, (cy + (cy-s*R))/2);
+}
+
+function update(d){
+  const deg = normalizeDeg(d);
+  const rad = toRad(deg);
+  currentDeg = deg; // guardem l'angle actual per al resize
+
+  degInput.value=d;
+  slider.value=deg;
+
+  resDeg.textContent=deg;
+  resRad.textContent=rad.toFixed(3);
+  resCos.textContent=round(Math.cos(rad),4);
+  resSin.textContent=round(Math.sin(rad),4);
+
+  const c=Math.cos(rad);
+  resTan.textContent = Math.abs(c)<1e-8 ? "indefinida" : round(Math.tan(rad),4);
+
+  resQuadrant.textContent = quadrantText(quadrant(deg),deg);
+
+  draw(deg);
+}
+
+degInput.addEventListener("input",()=>update(parseFloat(degInput.value)));
+slider.addEventListener("input",()=>update(parseFloat(slider.value)));
+
+// Inicialització i resize
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+update(currentDeg);
+</script>
+
+</body>
+</html>
