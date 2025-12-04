@@ -115,7 +115,7 @@
     }
 
     .results-box {
-      margin-top: 10px;
+      margin-top: 6px;
       padding: 10px 12px;
       border-radius: 12px;
       background: radial-gradient(circle at top left, rgba(56,189,248,0.18), rgba(15,23,42,0.95));
@@ -221,6 +221,7 @@
         </div>
 
         <!-- RESULTATS -->
+        <div class="pill" style="margin-top:6px;">📊 Resultats trigonomètrics</div>
         <div class="results-box">
           <div class="result-line"><span class="label">α (°): </span><span id="res-deg">30</span></div>
           <div class="result-line"><span class="label">α (rad): </span><span id="res-rad">π/6</span></div>
@@ -248,7 +249,7 @@
       <div>
         <div class="pill">📈 Gràfic</div>
         <div class="graph-card">
-          <!-- width/height inicials només com a fallback; JS els sobreescriu -->
+          <!-- width/height inicials només com a fallback -->
           <canvas id="unit-circle" width="720" height="540"></canvas>
         </div>
 
@@ -315,22 +316,27 @@ function quadrantText(q,deg){
   return `Sobre un eix – sin ${sign(s)}, cos ${sign(c)}, tan ${Math.abs(c)<1e-8 ? "indefinida" : sign(t)}`;
 }
 
-// Ajusta el canvas a l'ample disponible mantenint proporció 4:3
+// 🔧 Ajusta el canvas mantenint el layout CSS i només puja la resolució interna
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
-  const width = rect.width;
-  const height = rect.width * 0.75; // 4:3
+  const cssWidth = rect.width || 300;
+  const cssHeight = rect.height || cssWidth * 0.75; // per si falla l'aspect-ratio
 
-  canvas.width = width;
-  canvas.height = height;
+  const dpr = window.devicePixelRatio || 1;
 
-  W = canvas.width;
-  H = canvas.height;
+  // Mida REAL del canvas en píxels físics
+  canvas.width = cssWidth * dpr;
+  canvas.height = cssHeight * dpr;
+
+  // Escalem el sistema de coordenades perquè 1 unitat = 1 px CSS
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // Guardem mides en píxels CSS per dibuixar
+  W = cssWidth;
+  H = cssHeight;
   cx = W / 2;
   cy = H / 2;
   R = Math.min(W, H) * 0.35;
-
-  draw(currentDeg);
 }
 
 function draw(deg){
@@ -357,20 +363,23 @@ function draw(deg){
   ctx.beginPath(); ctx.moveTo(cx-R*1.2,cy); ctx.lineTo(cx+R*1.2,cy); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(cx,cy-R*1.2); ctx.lineTo(cx,cy+R*1.2); ctx.stroke();
 
+  // 🔹 offset adaptatiu perquè els radian labels no es tallin al mòbil
+  const offset = W < 500 ? 18 : 35;
+
   // radian labels
   ctx.fillStyle="#9ca3af";
   ctx.font = (W < 400 ? "14px system-ui" : "16px system-ui");
 
   ctx.textAlign="left"; ctx.textBaseline="middle";
-  ctx.fillText("0 ⇢ 2π", cx + R + 35, cy);
-  ctx.textAlign="right"; ctx.fillText("π", cx - R - 35, cy);
+  ctx.fillText("0 ⇢ 2π", cx + R + offset, cy);
+  ctx.textAlign="right"; ctx.fillText("π", cx - R - offset, cy);
 
   ctx.textAlign="center";
   ctx.textBaseline="bottom";
-  ctx.fillText("π/2", cx, cy - R - 35);
+  ctx.fillText("π/2", cx, cy - R - offset);
 
   ctx.textBaseline="top";
-  ctx.fillText("3π/2", cx, cy + R + 35);
+  ctx.fillText("3π/2", cx, cy + R + offset);
 
   // cercle
   ctx.beginPath();
@@ -466,7 +475,11 @@ degInput.addEventListener("input",()=>update(parseFloat(degInput.value)));
 slider.addEventListener("input",()=>update(parseFloat(slider.value)));
 
 // Inicialització i resize
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  draw(currentDeg);
+});
+
 resizeCanvas();
 update(currentDeg);
 </script>
