@@ -2,19 +2,28 @@
 <html lang="ca">
 <head>
   <meta charset="UTF-8">
-  <title>Esfera goniomètrica – sin i cos</title>
+  <title>Esfera goniomètrica: sin i cos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tipografies de marca: Paytone One + Urbanist -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Urbanist:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #0b1226;
-      --panel: #0e1530;
-      --accent: #60a5fa;
-      --accent2: #34d399;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --danger: #f97373;
-      --border: #334155;
+      /* Paleta inspirada en el manual de marca */
+      --lima: #d5f476;        /* Verd lima - destacats / fons suau */
+      --blanc: #f9f8ef;       /* Blanc cru - targetes */
+      --fucsia: #ff3d78;      /* Fúcsia - accent principal */
+      --jade: #00a874;        /* Verd jade - accent secundari */
+      --text: #000000;        /* Text principal en negre */
+      --text2: #1f2937;       /* Text secundari gris fosc */
+      --danger: #ff3d78;      /* Fúcsia també per errors/avisos */
+      --border: #5c3a93;      /* Morat per a contorns */
+      --lila: #d5bef7;        /* Lila claret */
     }
+
     * { box-sizing: border-box; }
 
     body {
@@ -23,33 +32,62 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at top, #111827 0, #020617 40%);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(circle at top left, #ffaac9 0, #d5f476 35%, #d5bef7 70%, #5c3a93 100%);
+      font-family: "Urbanist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       color: var(--text);
       padding: 16px;
     }
 
     .card {
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 16px;
+      background: var(--blanc);
+      border-radius: 18px;
       padding: 20px 24px 24px;
       max-width: 1100px;
       width: 100%;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.5);
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow:
+        0 18px 35px rgba(0, 0, 0, 0.18),
+        0 0 0 2px rgba(0, 0, 0, 0.05);
+      border: 2px solid var(--border);
     }
 
+    /* 🔹 Logo capçalera */
     .logo-wrap {
       display: flex;
       justify-content: center;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
     }
     .logo-wrap img {
-      max-width: 180px;
-      opacity: 0.95;
-      transition: 0.15s;
+      max-width: 200px;
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.9;
+      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
     }
-    .logo-wrap img:hover { opacity: 1; transform: translateY(-1px); }
+    .logo-wrap img:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    /* 🔹 Logo final/imagotip */
+    .logo-footer {
+      margin-top: 35px;
+      display: flex;
+      justify-content: center;
+    }
+    .logo-footer img {
+      max-width: 50px;
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.9;
+      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    }
+    .logo-footer img:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
 
     h1 {
       margin: 0 0 8px;
@@ -57,55 +95,92 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      font-family: "Paytone One", system-ui, sans-serif;
+      letter-spacing: 0.02em;
+      color: var(--text);
     }
     h1 span {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, var(--accent2), var(--accent));
+      background: var(--jade);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 0.9rem;
-      color: #0b1120;
+      font-size: 0.95rem;
+      color: #ffffff;
+      box-shadow: 0 0 0 2px #ffffff;
     }
 
-    .subtitle { font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; }
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text2);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr 1.3fr;
       gap: 20px;
     }
+
     @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .pill {
-      padding: 4px 9px;
+      padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(15, 118, 110, 0.18);
-      color: #6ee7b7;
+      background: #00a8741f; /* verd jade molt suau */
+      color: var(--jade);
       font-size: 0.78rem;
       margin-bottom: 8px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      
     }
 
-    label { color: var(--muted); font-size: 0.9rem; }
+    label {
+      color: var(--text2);
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
 
     input[type="number"],
     input[type="text"] {
       width: 100%;
       padding: 7px 9px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: #020617;
-      color: #e5e7eb;
+      border-radius: 10px;
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      background: #ffffff;
+      color: var(--text);
       font-size: 0.9rem;
+      outline: none;
+      transition: border 0.15s, box-shadow 0.15s, background 0.15s, transform 0.08s;
     }
 
-    input[type="range"] { width: 100%; }
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--fucsia);
+      box-shadow: 0 0 0 2px rgba(255, 61, 120, 0.25);
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--fucsia); /* 🔹 barra de l'angle en fúcsia */
+    }
 
     .controls-grid {
       display: grid;
@@ -117,36 +192,55 @@
     .results-box {
       margin-top: 6px;
       padding: 10px 12px;
-      border-radius: 12px;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.18), rgba(15,23,42,0.95));
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
     }
 
     .result-line {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       margin: 2px 0;
+      font-size: 0.9rem;
     }
-    .result-line .label { color: var(--muted); }
-    .result-line .emph { color: var(--accent2); font-weight: 600; }
+    .result-line .label {
+      color: var(--text2);
+    }
+    .result-line .emph {
+      color: var(--jade);
+      font-weight: 600;
+    }
 
     table.special-angles {
       width: 100%;
       border-collapse: collapse;
       margin-top: 8px;
       font-size: 0.82rem;
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
     }
     table.special-angles td,
     table.special-angles th {
-      border: 1px solid rgba(148,163,184,0.4);
+      border: 1px solid rgba(0, 0, 0, 0.12);
       padding: 4px 6px;
       text-align: center;
+      color: var(--text2);
+    }
+    table.special-angles th {
+      background: var(--lila); /* 🔹 capçalera amb lila clar */
+      font-weight: 700;
     }
 
     .graph-card {
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 12px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.35);
+      padding-top: 17px;
+      padding-bottom: 19px;  /* 🔹 Afegeix espai inferior */
+      background: #ffffff;
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
     }
 
     /* Canvas responsive: ample 100% i proporció 4:3 */
@@ -173,9 +267,11 @@
     @media (max-width: 600px) {
       .card {
         padding: 16px;
+        border-radius: 14px;
       }
       h1 {
         font-size: 1.2rem;
+        flex-wrap: wrap;
       }
       .subtitle {
         font-size: 0.85rem;
@@ -195,16 +291,22 @@
 
 <body>
   <div class="card">
+    <!-- Logo superior -->
     <div class="logo-wrap">
-      <img src="https://i.ibb.co/Q7YJTwgn/PRINCIPAL-BEIGE.png" alt="L'Arrel Acadèmia">
+      <a href="https://www.larrelacademia.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.ibb.co/TDpf3BHr/PRINCIPAL-FUCSIA.png" alt="L'Arrel Acadèmia - Logo principal fúcsia">
+      </a>
     </div>
 
-    <h1><span>G</span>Esfera goniomètrica – sin i cos</h1>
+    <h1><span>◯</span>Esfera goniomètrica: sin i cos</h1>
 
-    <p class="subtitle">Mou l’angle i observa sin(α) i cos(α) sobre la circumferència trigonomètrica.</p>
+    <p class="subtitle">
+      Mou l’angle i observa els valors de <strong>sin(α)</strong> i <strong>cos(α)</strong> sobre la circumferència
+      trigonomètrica i la seva correspondència en radians.
+    </p>
 
     <div class="grid">
-      <!-- CONTROLS -->
+      <!-- CONTROLS + RESULTATS -->
       <div>
         <div class="pill">⚙️ Angle</div>
 
@@ -266,6 +368,13 @@
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- Logo final (imagotip) -->
+    <div class="logo-footer">
+      <a href="https://www.larrelacademia.cat/" target="_blank" rel="noopener noreferrer">
+        <img src="https://i.ibb.co/PvJdJ31H/IMAGOTIP-FUCSIA.png" alt="L'Arrel Acadèmia - Imagotip fúcsia" />
+      </a>
     </div>
   </div>
 
@@ -344,11 +453,16 @@ function draw(deg){
   const c = Math.cos(rad), s = Math.sin(rad);
 
   ctx.clearRect(0,0,W,H);
-  ctx.fillStyle="#020617";
+  ctx.fillStyle="#322d36";
   ctx.fillRect(0,0,W,H);
 
-  // quadrants
-  const cols=["#2563eb22","#16a34a22","#eab30822","#ef444422"];
+  // quadrants amb colors de marca
+  const cols=[
+    "#d5bef722",  // fúcsia suau
+    "#d5bef722",  // jade suau
+    "#d5bef722",  // lima suau
+    "#d5bef722"   // lila suau
+  ];
   for(let i=0;i<4;i++){
     ctx.beginPath();
     ctx.moveTo(cx,cy);
@@ -358,7 +472,7 @@ function draw(deg){
   }
 
   // eixos
-  ctx.strokeStyle="#9ca3afcc";
+  ctx.strokeStyle="#e5e7ebcc";
   ctx.lineWidth=2;
   ctx.beginPath(); ctx.moveTo(cx-R*1.2,cy); ctx.lineTo(cx+R*1.2,cy); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(cx,cy-R*1.2); ctx.lineTo(cx,cy+R*1.2); ctx.stroke();
@@ -367,7 +481,7 @@ function draw(deg){
   const offset = W < 500 ? 18 : 35;
 
   // radian labels
-  ctx.fillStyle="#9ca3af";
+  ctx.fillStyle="#e5e7eb";
   ctx.font = (W < 400 ? "14px system-ui" : "16px system-ui");
 
   ctx.textAlign="left"; ctx.textBaseline="middle";
@@ -381,50 +495,76 @@ function draw(deg){
   ctx.textBaseline="top";
   ctx.fillText("3π/2", cx, cy + R + offset);
 
-  // cercle
+  // cercle (fúcsia)
   ctx.beginPath();
   ctx.arc(cx,cy,R,0,Math.PI*2);
-  ctx.strokeStyle="#60a5fa";
-  ctx.lineWidth=2;
+  ctx.strokeStyle="#e5e7ebcc";
+  ctx.lineWidth=3;
   ctx.stroke();
 
-  // petit arc de l'angle (color lila)
-  const arcR = R * 0.2;
-  ctx.beginPath();
-  ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);
-  ctx.strokeStyle = "#a855f7";
-  ctx.lineWidth = 2;
-  ctx.stroke();
 
-  // radi
+// Petit arc de l'angle: àrea + línia
+const arcR = R * 0.20;
+
+// 1️⃣ Àrea omplerta (sector circular)
+ctx.beginPath();
+ctx.moveTo(cx, cy);                          // centre
+ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);     // ⬅️ IMPORTANT: igual que l'arc original
+ctx.closePath();
+
+ctx.fillStyle = "rgba(255, 61, 120, 0.25)";  // fúcsia suau translúcid
+ctx.fill();
+
+// 2️⃣ Línia de l’arc (mateix recorregut)
+ctx.beginPath();
+ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);     // ⬅️ mateixa crida: mateix sentit, mateixa forma
+ctx.strokeStyle = "#ff3d78";                 // fúcsia fort
+ctx.lineWidth = 2;
+ctx.stroke();
+
+
+  // radi (fúcsia)
   const px=cx+c*R, py=cy - s*R;
   ctx.beginPath();
-  ctx.strokeStyle="#a855f7";
-  ctx.lineWidth=2;
+  ctx.strokeStyle="#ff3d78";
+  ctx.lineWidth=3;
   ctx.moveTo(cx,cy);
   ctx.lineTo(px,py);
   ctx.stroke();
 
-  // punt
+  // punt (fúcsia)
   ctx.beginPath();
   ctx.arc(px,py,6,0,Math.PI*2);
-  ctx.fillStyle="#a855f7";
+  ctx.fillStyle="#ff3d78";
   ctx.fill();
 
-  // projeccio cos
-  ctx.strokeStyle="#22c55e";
-  ctx.lineWidth=2;
+  // projeccio cos (jade)
+  ctx.strokeStyle="#00a874";
+  ctx.lineWidth=3;
   ctx.beginPath();
   ctx.moveTo(cx,cy);
   ctx.lineTo(cx + c*R, cy);
   ctx.stroke();
+  
+  // 🔹 Bola al final de la projecció de cos(α)
+ctx.beginPath();
+ctx.arc(cx + c*R, cy, 5, 0, Math.PI * 2);
+ctx.fillStyle = "#00a874";
+ctx.fill();
 
-  // projeccio sin
-  ctx.strokeStyle="#eab308";
+  // projeccio sin (lima)
+  ctx.strokeStyle="#d5f476";
+  ctx.lineWidth=3;
   ctx.beginPath();
   ctx.moveTo(cx,cy);
   ctx.lineTo(cx, cy - s*R);
   ctx.stroke();
+  
+  // 🔹 Bola al final de la projecció de sin(α)
+ctx.beginPath();
+ctx.arc(cx, cy - s*R, 5, 0, Math.PI * 2);
+ctx.fillStyle = "#d5f476";
+ctx.fill();
 
   // línies guia
   ctx.setLineDash([4,4]);
@@ -437,14 +577,14 @@ function draw(deg){
   ctx.moveTo(px,py); ctx.lineTo(cx,py); ctx.stroke();
   ctx.setLineDash([]);
 
-  // text cos
-  ctx.fillStyle="#22c55e";
+  // text cos (jade)
+  ctx.fillStyle="#00a874";
   ctx.textAlign="center";
   ctx.textBaseline="top";
   ctx.fillText(`cos α ≈ ${round(c,2)}`, (cx + (cx+c*R))/2, cy+4);
 
-  // text sin
-  ctx.fillStyle="#eab308";
+  // text sin (lima)
+  ctx.fillStyle="#d5f476";
   ctx.textAlign="right";
   ctx.textBaseline="middle";
   ctx.fillText(`sin α ≈ ${round(s,2)}`, cx - 6, (cy + (cy-s*R))/2);
