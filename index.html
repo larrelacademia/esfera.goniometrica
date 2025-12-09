@@ -22,6 +22,7 @@
       --danger: #ff3d78;      /* Fúcsia també per errors/avisos */
       --border: #5c3a93;      /* Morat per a contorns */
       --lila: #d5bef7;        /* Lila claret */
+      --muted: #6b7280;       /* Text suau (peu de pàgina) */
     }
 
     * { box-sizing: border-box; }
@@ -72,7 +73,8 @@
 
     /* 🔹 Logo final/imagotip */
     .logo-footer {
-      margin-top: 35px;
+      margin-top: 1px;
+      margin-bottom: 13px;
       display: flex;
       justify-content: center;
     }
@@ -87,6 +89,20 @@
     .logo-footer img:hover {
       opacity: 1;
       transform: translateY(-1px);
+    }
+
+    /* 🔹 Peu de pàgina: línia separadora */
+    .footer {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+      padding-top: 10px;
+      min-height: 14px;
     }
 
     h1 {
@@ -145,7 +161,6 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      
     }
 
     label {
@@ -285,6 +300,10 @@
       table.special-angles {
         font-size: 0.78rem;
       }
+      .footer {
+        flex-direction: column;
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -370,11 +389,18 @@
       </div>
     </div>
 
+    <!-- 🔹 Peu de pàgina: línia + imagotip + text legal -->
+    <div class="footer"></div>
+
     <!-- Logo final (imagotip) -->
     <div class="logo-footer">
       <a href="https://www.larrelacademia.cat/" target="_blank" rel="noopener noreferrer">
         <img src="https://i.ibb.co/PvJdJ31H/IMAGOTIP-FUCSIA.png" alt="L'Arrel Acadèmia - Imagotip fúcsia" />
       </a>
+    </div>
+
+    <div style="text-align:center; margin-top:0; font-size:0.75rem; color:var(--muted);">
+      © 2025 L'Arrel Acadèmia · Simuladors educatius
     </div>
   </div>
 
@@ -502,26 +528,24 @@ function draw(deg){
   ctx.lineWidth=3;
   ctx.stroke();
 
+  // Petit arc de l'angle: àrea + línia
+  const arcR = R * 0.20;
 
-// Petit arc de l'angle: àrea + línia
-const arcR = R * 0.20;
+  // 1️⃣ Àrea omplerta (sector circular)
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);                          // centre
+  ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);     // ⬅️ IMPORTANT: igual que l'arc original
+  ctx.closePath();
 
-// 1️⃣ Àrea omplerta (sector circular)
-ctx.beginPath();
-ctx.moveTo(cx, cy);                          // centre
-ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);     // ⬅️ IMPORTANT: igual que l'arc original
-ctx.closePath();
+  ctx.fillStyle = "rgba(255, 61, 120, 0.25)";  // fúcsia suau translúcid
+  ctx.fill();
 
-ctx.fillStyle = "rgba(255, 61, 120, 0.25)";  // fúcsia suau translúcid
-ctx.fill();
-
-// 2️⃣ Línia de l’arc (mateix recorregut)
-ctx.beginPath();
-ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);     // ⬅️ mateixa crida: mateix sentit, mateixa forma
-ctx.strokeStyle = "#ff3d78";                 // fúcsia fort
-ctx.lineWidth = 2;
-ctx.stroke();
-
+  // 2️⃣ Línia de l’arc (mateix recorregut)
+  ctx.beginPath();
+  ctx.arc(cx, cy, arcR, 0, -rad, rad > 0);     // ⬅️ mateixa crida: mateix sentit, mateixa forma
+  ctx.strokeStyle = "#ff3d78";                 // fúcsia fort
+  ctx.lineWidth = 2;
+  ctx.stroke();
 
   // radi (fúcsia)
   const px=cx+c*R, py=cy - s*R;
@@ -547,10 +571,10 @@ ctx.stroke();
   ctx.stroke();
   
   // 🔹 Bola al final de la projecció de cos(α)
-ctx.beginPath();
-ctx.arc(cx + c*R, cy, 5, 0, Math.PI * 2);
-ctx.fillStyle = "#00a874";
-ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx + c*R, cy, 5, 0, Math.PI * 2);
+  ctx.fillStyle = "#00a874";
+  ctx.fill();
 
   // projeccio sin (lima)
   ctx.strokeStyle="#d5f476";
@@ -561,10 +585,10 @@ ctx.fill();
   ctx.stroke();
   
   // 🔹 Bola al final de la projecció de sin(α)
-ctx.beginPath();
-ctx.arc(cx, cy - s*R, 5, 0, Math.PI * 2);
-ctx.fillStyle = "#d5f476";
-ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx, cy - s*R, 5, 0, Math.PI * 2);
+  ctx.fillStyle = "#d5f476";
+  ctx.fill();
 
   // línies guia
   ctx.setLineDash([4,4]);
